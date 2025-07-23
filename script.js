@@ -355,7 +355,16 @@ $(document).ready(function() {
         const saved = localStorage.getItem('subconverter-config');
         if (saved) {
             try {
-                config = JSON.parse(saved);
+                const savedConfig = JSON.parse(saved);
+                // 确保配置结构完整
+                config = {
+                    rules: savedConfig.rules || [],
+                    groups: savedConfig.groups || [],
+                    settings: {
+                        enableRuleGenerator: savedConfig.settings?.enableRuleGenerator !== undefined ? savedConfig.settings.enableRuleGenerator : true,
+                        overwriteOriginalRules: savedConfig.settings?.overwriteOriginalRules !== undefined ? savedConfig.settings.overwriteOriginalRules : true
+                    }
+                };
             } catch (e) {
                 console.error('加载配置失败:', e);
                 config = JSON.parse(JSON.stringify(defaultConfig));
@@ -453,20 +462,19 @@ $(document).ready(function() {
                 const groupStr = line.substring(19);
                 const parts = groupStr.split('`');
                 if (parts.length >= 2) {
-                    const nameParts = parts[0].split('`');
-                    const name = nameParts[0];
-                    const type = nameParts[1];
+                    const name = parts[0];
+                    const type = parts[1];
                     
                     const group = { name, type };
                     
                     if (parts.length > 2) {
                         if (type === 'url-test' || type === 'load-balance') {
-                            group.filter = parts[1];
-                            if (parts.length > 2) group.testUrl = parts[2];
-                            if (parts.length > 3) group.interval = parseInt(parts[3]) || 300;
-                            if (parts.length > 5) group.tolerance = parseInt(parts[5]) || 50;
+                            group.filter = parts[2] || '';
+                            if (parts.length > 3) group.testUrl = parts[3];
+                            if (parts.length > 4) group.interval = parseInt(parts[4]) || 300;
+                            if (parts.length > 6) group.tolerance = parseInt(parts[6]) || 50;
                         } else {
-                            group.options = parts.slice(1).join('`');
+                            group.options = parts.slice(2).join('`');
                         }
                     }
                     

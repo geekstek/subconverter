@@ -1,0 +1,25 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "一个现代化的 Subconverter 配置文件管理界面，让您可以轻松管理 Clash 规则集和代理分组配置。",
+  "main": "script.js",
+  "scripts": {
+    "build-css": "tailwindcss -i ./src/input.css -o ./styles.css",
+    "watch-css": "tailwindcss -i ./src/input.css -o ./styles.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geekstek/subconverter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/geekstek/subconverter/issues"
+  },
+  "homepage": "https://github.com/geekstek/subconverter#readme",
+  "devDependencies": {
+    "tailwindcss": "^4.1.11"
+  }
+}
