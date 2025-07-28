@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义样式 */
+.rule-item {
+    border-left: 4px solid #3b82f6;
+    transition: all 0.3s ease;
+}
+.rule-item:hover {
+    border-left-color: #1d4ed8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.group-item {
+    border-left: 4px solid #10b981;
+}
+.group-item:hover {
+    border-left-color: #059669;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.floating-action {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 50;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+.tab-button {
+    transition: all 0.3s ease;
+}
+.tab-button.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateY(-2px);
+}
+.gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.rule-category {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+.group-category {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+.glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}

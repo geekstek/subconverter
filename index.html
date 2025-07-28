@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subconverter 规则管理器</title>
+    <link href="styles.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-cogs text-2xl"></i>
+                    <h1 class="text-2xl font-bold">Subconverter 规则管理器</h1>
+                </div>
+                <div class="flex space-x-3">
+                    <button id="importBtn" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2">
+                        <i class="fas fa-upload"></i>
+                        <span>导入配置</span>
+                    </button>
+                    <button id="exportBtn" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2">
+                        <i class="fas fa-download"></i>
+                        <span>导出配置</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-8">
+        <!-- Tab Navigation -->
+        <div class="mb-8">
+            <div class="flex space-x-2 bg-white rounded-lg p-2 shadow-lg">
+                <button class="tab-button flex-1 py-3 px-6 rounded-lg font-medium transition-all active" data-tab="rules">
+                    <i class="fas fa-list-ul mr-2"></i>规则集管理
+                </button>
+                <button class="tab-button flex-1 py-3 px-6 rounded-lg font-medium transition-all" data-tab="groups">
+                    <i class="fas fa-layer-group mr-2"></i>分组管理
+                </button>
+                <button class="tab-button flex-1 py-3 px-6 rounded-lg font-medium transition-all" data-tab="settings">
+                    <i class="fas fa-cog mr-2"></i>全局设置
+                </button>
+                <button class="tab-button flex-1 py-3 px-6 rounded-lg font-medium transition-all" data-tab="preview">
+                    <i class="fas fa-eye mr-2"></i>配置预览
+                </button>
+            </div>
+        </div>
+
+        <!-- Rules Tab -->
+        <div id="rules" class="tab-content active">
+            <div class="glass-effect rounded-lg p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                        <div class="w-4 h-8 rule-category rounded mr-3"></div>
+                        规则集配置
+                    </h2>
+                    <button id="addRuleBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all flex items-center space-x-2">
+                        <i class="fas fa-plus"></i>
+                        <span>添加规则</span>
+                    </button>
+                </div>
+                <div id="rulesList" class="space-y-3">
+                    <!-- Rules will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Groups Tab -->
+        <div id="groups" class="tab-content">
+            <div class="glass-effect rounded-lg p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                        <div class="w-4 h-8 group-category rounded mr-3"></div>
+                        分组配置
+                    </h2>
+                    <button id="addGroupBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all flex items-center space-x-2">
+                        <i class="fas fa-plus"></i>
+                        <span>添加分组</span>
+                    </button>
+                </div>
+                <div id="groupsList" class="space-y-3">
+                    <!-- Groups will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="glass-effect rounded-lg p-6 shadow-lg">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-cog mr-3 text-gray-600"></i>
+                    全局设置
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">规则生成器</label>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="enableRuleGenerator" class="mr-2">
+                                <span>启用规则生成器</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">覆盖原始规则</label>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="overwriteOriginalRules" class="mr-2">
+                                <span>覆盖原始规则</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Tab -->
+        <div id="preview" class="tab-content">
+            <div class="glass-effect rounded-lg p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-eye mr-3 text-gray-600"></i>
+                        配置预览
+                    </h2>
+                    <button id="refreshPreview" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-all flex items-center space-x-2">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>刷新预览</span>
+                    </button>
+                </div>
+                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+                    <pre id="configPreview"># 配置预览将在这里显示</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Buttons -->
+    <div class="floating-action">
+        <div class="flex flex-col space-y-3">
+            <button id="saveConfig" class="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg transition-all hover:scale-110">
+                <i class="fas fa-save text-xl"></i>
+            </button>
+            <button id="clearAll" class="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg transition-all hover:scale-110">
+                <i class="fas fa-trash text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Rule Modal -->
+    <div id="ruleModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold">编辑规则</h3>
+                <button class="text-gray-500 hover:text-gray-700" onclick="closeModal('ruleModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="ruleForm">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">规则名称</label>
+                        <input type="text" id="ruleName" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="例如: 🎯 全球直连">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">规则URL</label>
+                        <input type="url" id="ruleUrl" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="https://...">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeModal('ruleModal')" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Group Modal -->
+    <div id="groupModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-3xl mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold">编辑分组</h3>
+                <button class="text-gray-500 hover:text-gray-700" onclick="closeModal('groupModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="groupForm">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">分组名称</label>
+                        <input type="text" id="groupName" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="例如: 🚀 节点选择">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">分组类型</label>
+                        <select id="groupType" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                            <option value="select">手动选择 (select)</option>
+                            <option value="url-test">延迟测试 (url-test)</option>
+                            <option value="load-balance">负载均衡 (load-balance)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">节点筛选规则</label>
+                        <input type="text" id="groupFilter" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="例如: (港|HK|Hong Kong)">
+                    </div>
+                    <div id="urlTestOptions" class="space-y-2 hidden">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">测试URL</label>
+                            <input type="url" id="testUrl" class="w-full border border-gray-300 rounded-lg px-3 py-2" value="http://www.gstatic.com/generate_204">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">测试间隔 (秒)</label>
+                                <input type="number" id="testInterval" class="w-full border border-gray-300 rounded-lg px-3 py-2" value="300">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">容差 (ms)</label>
+                                <input type="number" id="tolerance" class="w-full border border-gray-300 rounded-lg px-3 py-2" value="50">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">其他选项</label>
+                        <textarea id="groupOptions" class="w-full border border-gray-300 rounded-lg px-3 py-2 h-20" placeholder="例如: []♻️ 自动选择`[]🇭🇰 香港节点`[]DIRECT"></textarea>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeModal('groupModal')" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
+                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="importModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-4xl mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold">导入配置</h3>
+                <button class="text-gray-500 hover:text-gray-700" onclick="closeModal('importModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">粘贴配置文本</label>
+                    <textarea id="importText" class="w-full border border-gray-300 rounded-lg px-3 py-2 h-96 font-mono text-sm" placeholder="粘贴您的 subconverter 配置文本..."></textarea>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('importModal')" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
+                    <button type="button" id="executeImport" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">导入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
